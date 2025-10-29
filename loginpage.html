@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — KakeiTrack</title>
+  <link rel="stylesheet" href="stylemain.css">
+</head>
+<body>
+  <main class="container" role="main">
+    <div class="brand" aria-hidden="false">
+      <div class="logo" aria-hidden="true">KT</div>
+      <div>
+        <h1>KakeiTrack</h1>
+        <p class="lead">Sign in to continue</p>
+      </div>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="username" />
+        <div class="error" id="emailError">Please enter a valid email.</div>
+      </div>
+
+      <div class="field pw-row">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password" minlength="6" />
+        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">Show</button>
+      </div>
+      <div class="error" id="pwError">Password must be at least 6 characters.</div>
+      </div>
+      <div class="row">
+        <label class="remember">
+          <input type="checkbox" id="remember" name="remember" />
+          <span style="font-size:13px;color:var(--muted)">Remember me</span>
+        </label>
+        <a class="muted-link" href="#" id="forgot">Forgot?</a>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="submit">Sign in</button>
+        <button type="button" class="secondary" id="signup">Create account</button>
+      </div>
+
+      <div class="helper">By continuing you agree to the Terms of Service and Privacy Policy.</div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('loginForm');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const emailError = document.getElementById('emailError');
+const pwError = document.getElementById('pwError');
+const toggle = document.getElementById('togglePw');
+
+toggle.addEventListener('click', () => {
+  if (password.type === 'password') {
+    password.type = 'text';
+    toggle.textContent = 'Hide';
+  } else {
+    password.type = 'password';
+    toggle.textContent = 'Show';
+  }
+});
+
+function validate() {
+  let ok = true;
+  if (!email.checkValidity()) {
+    emailError.style.display = 'block'; ok = false;
+  } else emailError.style.display = 'none';
+
+  if (!password.checkValidity()) {
+    pwError.style.display = 'block'; ok = false;
+  } else pwError.style.display = 'none';
+
+  return ok;
+}
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const payload = {
+    email: email.value.trim(),
+    password: password.value,
+    remember: document.getElementById('remember').checked
+  };
+  console.log('Submitting', payload);
+  form.querySelector('.actions').innerHTML =
+    '<div style="color:green;text-align:center;padding:12px;border-radius:8px">Signed in (demo)</div>';
+});
+
+[email, password].forEach(input => {
+  input.addEventListener('focus', () => {
+    emailError.style.display = 'none';
+    pwError.style.display = 'none';
+  });
+
+  input.addEventListener('input', () => {
+    if (email.checkValidity()) emailError.style.display = 'none';
+    if (password.checkValidity()) pwError.style.display = 'none';
+  });
+});
+
+// Non-functional links
+document.getElementById('forgot').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Forgot password flow not implemented.');
+});
+document.getElementById('signup').addEventListener('click', () => {
+  alert('Sign up flow not implemented.');
+});
+
+  </script>
+</body>
+</html>
