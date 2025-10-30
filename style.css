@@ -8,7 +8,9 @@ body {
   font-family: 'Montserrat', sans-serif;
   background: #000;
   color: #fff;
-  overflow: hidden; /* ⛔ prevents scroll */
+  /* allow vertical scrolling but avoid horizontal overflow */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* NAVBAR */
@@ -20,6 +22,8 @@ body {
   justify-content: space-between;
   position: fixed;
   top: 0;
+  left: 0;
+  z-index: 20;
 }
 
 .nav-left {
@@ -41,13 +45,18 @@ body {
   display: flex;
   list-style: none;
   gap: 30px;
+  flex-wrap: wrap; /* allow items to move to next line instead of compressing */
+}
+
+.nav-links > * {
+  flex: 0 0 auto; /* prevent individual links from shrinking */
 }
 
 .nav-links a {
   text-decoration: none;
   color: #caffc9;
   font-size: 15px;
-  transition: 0.3s;
+  transition: color 0.2s;
 }
 
 .nav-links a:hover {
@@ -65,12 +74,13 @@ body {
 
 /* HERO */
 .hero-section {
-  height: 100vh; /* Full screen */
+  min-height: 100vh; /* full screen at minimum, but allows content to grow */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 100px 20px; /* give breathing room when viewport is small */
 }
 
 .hero-logo {
@@ -79,18 +89,21 @@ body {
 }
 
 .hero-title {
-  font-size: 42px;
+  /* responsive font sizing */
+  font-size: clamp(24px, 4vw, 42px);
   font-weight: 600;
   color: #b9ffb9;
   margin-bottom: 10px;
 }
 
 .hero-subtitle {
-  font-size: 18px;
+  font-size: clamp(14px, 2.2vw, 18px);
   color: #cfffda;
-  max-width: 480px;
+  max-width: 90%; /* allow subtitle to shrink fluidly */
   line-height: 1.4;
-}.btn-start {
+}
+
+.btn-start {
   display: inline-block;
   margin-top: 25px;
   padding: 12px 28px;
@@ -100,7 +113,9 @@ body {
   font-size: 1rem;
   border-radius: 30px;
   text-decoration: none;
-  transition: 0.3s;
+  transition: background 0.3s, transform 0.3s;
+  cursor: pointer; /* make it clear it's clickable */
+  flex: 0 0 auto; /* prevent shrinking inside flex containers */
 }
 
 .btn-start:hover {
@@ -108,3 +123,22 @@ body {
   transform: translateY(-2px);
 }
 
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .navbar { padding: 16px 30px; }
+  .nav-links { gap: 18px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 12px 20px; }
+  .nav-links { gap: 12px; }
+  .hero-section { padding: 60px 16px; }
+  .hero-logo { width: 120px; }
+}
+
+@media (max-width: 480px) {
+  .nav-links { display: none; } /* consider showing a hamburger menu here */
+  .hero-title { font-size: 24px; }
+  .hero-subtitle { max-width: 100%; }
+  .btn-start { width: 100%; max-width: 320px; }
+}
